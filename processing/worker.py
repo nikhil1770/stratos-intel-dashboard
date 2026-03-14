@@ -171,6 +171,7 @@ def run_worker(limit: int = 500, batch_size: int = 50, poll_interval: int = 10) 
 
                 db.commit()
                 if batch_processed > 0:
+                    print(f"[WORKER] Successfully processed {batch_processed} items")
                     logger.info("SUCCESS: Processed %d posts", batch_processed)
 
         except Exception as exc:  # noqa: BLE001
@@ -180,6 +181,7 @@ def run_worker(limit: int = 500, batch_size: int = 50, poll_interval: int = 10) 
             db.close()
 
         # Sleep before the next polling cycle
+        time.sleep(3)
         time.sleep(poll_interval)
 
 

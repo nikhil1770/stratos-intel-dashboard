@@ -68,6 +68,7 @@ def load_models() -> None:
             _nlp = spacy.load("en_core_web_sm")
             logger.info("spaCy model 'en_core_web_sm' loaded.")
         except Exception as e:
+            print("SpaCy OOM: Falling back to lightweight processor")
             logger.error(f"CRITICAL: Failed to load SpaCy model: {e}. Switching to lightweight fallback.")
             _nlp = None # Explicitly None to trigger fallback
 

@@ -31,6 +31,7 @@ from typing import Optional
 
 import pandas as pd
 import requests
+import datetime
 
 from database.models import SocialActivity, SessionLocal
 
