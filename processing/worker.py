@@ -101,7 +101,7 @@ def run_worker(limit: int = 500, batch_size: int = 50, poll_interval: int = 10) 
                     break
 
                 # Aggressive logging as requested
-                print(f"[WORKER] Found {len(pending)} items to process.")
+                print(f"DEBUG: Worker found {len(pending)} raw items. Attempting to process...")
                 logger.info("DEBUG: Found %d raw rows in the database", len(pending))
                 total_fetched += len(pending)
                 logger.info(

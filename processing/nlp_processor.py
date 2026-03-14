@@ -43,7 +43,7 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 # Lazy model handles (populated by load_models())
 # ---------------------------------------------------------------------------
-_nlp = None          # spaCy language model
+_nlp = None          # DEPRECATED: SpaCy disabled for Zero-Memory NLP
 _vader = None        # VADER SentimentIntensityAnalyzer
 
 # Project root is one level up from this file
@@ -63,14 +63,10 @@ def load_models() -> None:
     global _nlp, _vader
 
     if _nlp is None:
-        import spacy  # noqa: PLC0415
-        try:
-            _nlp = spacy.load("en_core_web_sm")
-            logger.info("spaCy model 'en_core_web_sm' loaded.")
-        except Exception as e:
-            print("SpaCy OOM: Falling back to lightweight processor")
-            logger.error(f"CRITICAL: Failed to load SpaCy model: {e}. Switching to lightweight fallback.")
-            _nlp = None # Explicitly None to trigger fallback
+        # SpaCy is disabled to prevent OOM on memory-constrained servers.
+        # We now rely exclusively on the lightweight regex fallback.
+        logger.info("NLP: Zero-Memory mode active. SpaCy will not be loaded.")
+        _nlp = None
 
     if _vader is None:
         from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer  # noqa: PLC0415
@@ -149,30 +145,8 @@ def extract_locations_fallback(text: str) -> list[str]:
 # ---------------------------------------------------------------------------
 def extract_locations(text: str) -> list[str]:
     """Return unique GPE / LOC entity strings found in *text*."""
-    if _nlp is None:
-        logger.debug("NER: SpaCy not loaded. Using fallback country extractor.")
-        return extract_locations_fallback(text)
-
-    doc = _nlp(_clean(text))
-    seen: set[str] = set()
-    locations: list[str] = []
-    for ent in doc.ents:
-        if ent.label_ in {"GPE", "LOC"}:
-            name = ent.text.strip()
-            if name and name not in seen:
-                seen.add(name)
-                locations.append(name)
-    
-    # If SpaCy found nothing, still try the fallback as a safety net
-    if not locations:
-        locations = extract_locations_fallback(text)
-        
-    return locations
-
-
-# ---------------------------------------------------------------------------
-# Sentiment analysis — VADER
-# ---------------------------------------------------------------------------
+    # Zero-Memory Approach: Always use the lightweight fallback.
+    return extract_locations_fallback(text)
 def analyze_sentiment(text: str) -> dict[str, Any]:
     """Run VADER sentiment analysis on *text*.
 
