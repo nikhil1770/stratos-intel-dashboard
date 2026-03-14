@@ -113,16 +113,40 @@ def run_worker(limit: int = 500, batch_size: int = 50, poll_interval: int = 10) 
                 batch_processed = 0
                 for row in pending:
                     try:
-                        result = process_post(
-                            {
-                                "text": row.text or "",
-                                "raw_location": row.raw_location,
-                                "source": row.source,
-                                "timestamp": (
-                                    row.timestamp.isoformat() if row.timestamp else None
-                                ),
+                        # Geocoding Retry Logic: Catch GeocoderQueryError
+                        from geopy.exc import GeocoderQueryError
+                        
+                        try:
+                            result = process_post(
+                                {
+                                    "text": row.text or "",
+                                    "raw_location": row.raw_location,
+                                    "source": row.source,
+                                    "timestamp": (
+                                        row.timestamp.isoformat() if row.timestamp else None
+                                    ),
+                                }
+                            )
+                        except GeocoderQueryError as gqe:
+                            logger.warning("Geocoding Query Error: %s. Waiting 2s extra.", gqe)
+                            time.sleep(2)
+                            # Return minimal result to allow fallback
+                            result = {
+                                "latitude": None, 
+                                "longitude": None, 
+                                "extracted_locations": [], 
+                                "geocoded_location": "Rate-Limited Fallback"
                             }
-                        )
+
+                        # Rate Limit: 1.1s delay after every geocoding attempt (inside process_post)
+                        time.sleep(1.1)
+
+                        # Fallback Coordinates: 0,0 if geocoding failed
+                        if result.get("latitude") is None:
+                            result["latitude"] = 0.0
+                            result["longitude"] = 0.0
+                            if not result.get("geocoded_location"):
+                                result["geocoded_location"] = "Unknown (Fallback)"
 
                         processed_row = ProcessedActivity(
                             id=uuid.uuid4(),
