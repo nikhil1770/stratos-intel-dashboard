@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coriolis — Global Social Media Activity Map</title>
+  <meta name="description"
+    content="Real-time interactive map of global social media activity, sentiment analysis, and geographic trends powered by Mastodon and GDELT." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap"
+    rel="stylesheet" />
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Leaflet MarkerCluster CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+
+  <!-- App CSS -->
+  <link rel="stylesheet" href="/static/style.css?v=1.1" />
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+  <!-- ===== TOP NAVIGATION BAR ===== -->
+  <nav class="top-nav glass-panel neon-border-bottom">
+    <div class="nav-left">
+      <div class="logo">
+        <span class="logo-icon neon-text">🌐</span>
+        <h1>STRATOS<span class="logo-accent">_INTEL</span></h1>
+      </div>
+    </div>
+    
+    <div class="nav-center">
+      <div class="view-switcher" id="view-switcher">
+        <button class="view-btn active" id="btn-view-globe" data-view="globe">🌍 3D EARTH</button>
+        <button class="view-btn" id="btn-view-map" data-view="map">🗺️ 2D MAP</button>
+      </div>
+    </div>
+    
+    <div class="nav-right">
+      <div class="live-status">
+        <span class="live-dot" id="status-dot"></span>
+        <span class="live-text" id="live-indicator">LIVE STREAM</span>
+      </div>
+      <span class="last-updated" id="last-updated">SYS.INIT</span>
+    </div>
+  </nav>
+
+  <!-- ===== FILTER TOGGLE BUTTON ===== -->
+  <div id="filter-toggle-wrapper" class="filter-toggle-wrapper">
+    <button id="btn-toggle-filters" class="cyber-btn btn-primary">> FILTERS</button>
+  </div>
+
+  <!-- ===== FLOATING LEFT PANEL (FILTERS & STATS) ===== -->
+  <aside id="leftFiltersPanel" class="left-panel glass-panel neon-border-right collapsed">
+    <div class="panel-top-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+      <span class="text-neon" style="font-weight: bold;">[ ACTIVE_FILTERS ]</span>
+    </div>
+    
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-box">
+        <span class="stat-label">TOTAL PINGS</span>
+        <span class="stat-value text-cyan" id="stat-total">0</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">GEO-MAPPED</span>
+        <span class="stat-value text-blue" id="stat-geo">0</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">SENTIMENT (+)</span>
+        <span class="stat-value text-green" id="stat-pos">0</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">SENTIMENT (-)</span>
+        <span class="stat-value text-red" id="stat-neg">0</span>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span>// QUERY_FILTERS</span>
+    </div>
+
+    <!-- Search Filter -->
+    <div class="filter-group">
+      <label class="filter-label" for="filter-search">
+        <span class="icon">🔍</span> KEYWORD
+      </label>
+      <input type="text" id="filter-search" class="cyber-input" placeholder="Enter target sequence..." />
+    </div>
+
+    <!-- Time Filter -->
+    <div class="filter-group">
+      <label class="filter-label" for="filter-time">
+        <span class="icon">⏱️</span> TIME DELTA
+      </label>
+      <select id="filter-time" class="cyber-select">
+        <option value="">T-MINUS ALL</option>
+        <option value="24h">T-MINUS 24H</option>
+        <option value="1h">T-MINUS 1H</option>
+      </select>
+    </div>
+
+    <!-- Source Filter -->
+    <div class="filter-group">
+      <label class="filter-label" for="filter-source">
+        <span class="icon">📡</span> DATA NODE
+      </label>
+      <select id="filter-source" class="cyber-select">
+        <option value="">ALL NODES</option>
+        <option value="mastodon">MASTODON_NET</option>
+        <option value="gdelt">GDELT_GKG</option>
+        <option value="rss">RSS_FEED</option>
+      </select>
+    </div>
+
+    <!-- Topic Filter -->
+    <div class="filter-group">
+      <label class="filter-label" for="filter-topic">
+        <span class="icon">🏷️</span> CATEGORY_TAG
+      </label>
+      <select id="filter-topic" class="cyber-select">
+        <option value="">ALL TAGS</option>
+        <option value="news">NEWS</option>
+        <option value="tech">TECH</option>
+        <option value="crypto">CRYPTO</option>
+        <option value="politics">POLITICS</option>
+        <option value="finance">FINANCE</option>
+        <option value="ai">ARTIFICIAL_INTEL</option>
+        <option value="climate">CLIMATE</option>
+      </select>
+    </div>
+
+    <!-- Sentiment Filter -->
+    <div class="filter-group">
+      <label class="filter-label" for="filter-sentiment">
+        <span class="icon">🧠</span> SENTIMENT_ANALYSIS
+      </label>
+      <select id="filter-sentiment" class="cyber-select">
+        <option value="">ALL STATES</option>
+        <option value="Positive">POSITIVE</option>
+        <option value="Neutral">NEUTRAL</option>
+        <option value="Negative">NEGATIVE</option>
+      </select>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="filter-actions">
+      <button id="btn-apply" class="cyber-btn btn-primary">EXECUTE QUERY</button>
+      <button id="btn-reset" class="cyber-btn btn-secondary">RESET PARAMS</button>
+    </div>
+
+
+
+    <div class="panel-footer">
+      <a href="/docs" target="_blank" class="cyber-link">ACCESS API TERMINAL >_</a>
+    </div>
+  </aside>
+
+  <!-- ===== FLOATING TOP RIGHT (HOT ZONES) ===== -->
+  <div id="hotZonesPanel" class="hot-zones-panel glass-panel neon-border-bottom">
+    <div class="panel-header text-neon" style="font-size: 0.9rem; margin-bottom: 8px;">[ ACTIVE_HOT_ZONES ]</div>
+    <ul id="hot-zones-list" class="cyber-list" style="margin: 0; padding-left: 0; list-style-type: none;">
+      <li class="loading-text" style="font-size: var(--text-sm);">SCANNING CRITICAL GRIDS...</li>
+    </ul>
+  </div>
+
+  <!-- ===== FLOATING BOTTOM LEFT (LOCAL INTERCEPTOR) ===== -->
+  <div id="localInterceptorPanel" class="local-interceptor glass-panel neon-border-top">
+    <div class="panel-header text-neon" style="font-size: 0.85rem; margin-bottom: 5px;">[ LOCAL_INTERCEPTOR ]</div>
+    <div id="interceptor-feed" class="interceptor-content" style="font-family: var(--font-mono); font-size: var(--text-xs); line-height: 1.4; color: var(--color-foreground);">
+      <div class="ticker-item loading-text blink" style="color: var(--color-muted);">Awaiting intercept packets...</div>
+    </div>
+  </div>
+
+  <!-- ===== FLOATING RIGHT PANEL (COUNTRY INTEL) ===== -->
+  <aside id="countryIntelPanel" class="right-panel glass-panel neon-border-left collapsed">
+    <div class="panel-top-bar" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+      <h2 id="selectedCountryName" class="text-neon" style="margin: 0; font-size: 1.4rem; max-width: 250px; line-height: 1.1;">SYSTEM STANDBY</h2>
+      <button id="closeIntelPanel" class="cyber-btn btn-secondary" style="padding: 2px 8px; flex-shrink: 0;">X</button>
+    </div>
+    <div class="intel-subheader" style="margin-bottom: 15px; font-size: 0.85rem;">
+      <span style="color: var(--text-muted)">NET STATUS: </span><span id="countrySentiment" style="font-weight: bold;">[AWAITING SELECTION]</span>
+    </div>
+    
+    <div class="section-divider">
+      <span>// LOCAL_INTERCEPTS</span>
+    </div>
+    
+    <div id="countryFeed" class="feed-container">
+      <div class="text-muted" style="padding: 20px; text-align: center; font-style: italic;">Initiate geospatial scan to access datastream...</div>
+    </div>
+  </aside>
+
+  <!-- ===== FLOATING BOTTOM BAR (LIVE TICKER) ===== -->
+  <div class="bottom-ticker glass-panel neon-border-top">
+    <div class="ticker-label text-neon">SYS.FEED ></div>
+    <div id="live-ticker" class="ticker-content">
+      <!-- Ticker items will scroll here -->
+      <span class="ticker-item loading-text">Establishing connection to datastream...</span>
+    </div>
+  </div>
+
+  <!-- ===== VISUALIZATION CONTAINERS ===== -->
+  <main class="viz-container">
+    <!-- 3D Globe Container -->
+    <div id="globeViz" class="viz-layer active-viz"></div>
+    
+    <!-- 2D Map Container -->
+    <div id="mapViz" class="viz-layer hidden-viz">
+      <!-- Old Layer Controls inside 2D map -->
+      <div class="map-controls glass-panel">
+        <div class="layer-toggle" id="layer-toggle">
+          <button class="toggle-btn active" id="btn-markers" data-layer="markers">📍 POINTS</button>
+          <button class="toggle-btn" id="btn-heatmap" data-layer="heatmap">🔥 HEAT</button>
+          <button class="toggle-btn" id="btn-both" data-layer="both">✨ HYBRID</button>
+        </div>
+      </div>
+      <div id="map"></div>
+    </div>
+  </main>
+
+  <!-- ===== LOADING OVERLAY ===== -->
+  <div id="loading-overlay" class="cyber-overlay">
+    <div class="loader-content">
+      <div class="cyber-spinner"></div>
+      <p class="loader-text text-neon blink">INITIALIZING GLOBAL SCAN...</p>
+    </div>
+  </div>
+
+  <!-- ===== SCRIPTS ===== -->
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Leaflet MarkerCluster -->
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <!-- Leaflet.heat -->
+  <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+  <!-- Globe.gl & Three.js -->
+  <script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/globe.gl"></script>
+  <!-- App JS -->
+  <script src="/static/app.js?v=1.1"></script>
+</body>
+
+</html>

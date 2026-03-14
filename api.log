@@ -1,0 +1,14 @@
+/Users/Shared/Files From d.localized/Msc Sem 2/Coriolis/api/main.py:62: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+  source: Optional[str] = Query(
+/Users/Shared/Files From d.localized/Msc Sem 2/Coriolis/api/main.py:70: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+  min_sentiment: Optional[float] = Query(
+INFO:     Will watch for changes in these directories: ['/Users/Shared/Files From d.localized/Msc Sem 2/Coriolis']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [74808] using WatchFiles
+/Users/Shared/Files From d.localized/Msc Sem 2/Coriolis/api/main.py:62: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+  source: Optional[str] = Query(
+/Users/Shared/Files From d.localized/Msc Sem 2/Coriolis/api/main.py:70: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+  min_sentiment: Optional[float] = Query(
+INFO:     Started server process [74942]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.

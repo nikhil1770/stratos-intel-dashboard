@@ -1,0 +1,225 @@
+"""
+processing/worker.py
+--------------------
+DB worker for the Coriolis Data Processing & NLP Layer (Step 2).
+
+Workflow
+--------
+1. Query ``social_activity`` rows where ``status = 'pending'``.
+2. For each row, call ``process_post()`` from nlp_processor.
+3. Insert a ``ProcessedActivity`` row with the enriched data.
+4. Mark the source row as ``status = 'processed'``.
+5. On error: mark ``status = 'error'`` and log; never crash the whole batch.
+
+Usage
+-----
+Run as a one-shot script (schedule via cron or systemd timer):
+
+    # From the project root:
+    python -m processing.worker
+
+    # Optional: limit to N rows per run
+    python -m processing.worker --limit 100
+
+Environment
+-----------
+Reads ``DATABASE_URL`` from ``.env`` (via python-dotenv).
+"""
+
+from __future__ import annotations
+
+import argparse
+import logging
+import time
+import uuid
+from datetime import datetime, timezone
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+from database.models import (  # noqa: E402
+    ProcessedActivity,
+    SessionLocal,
+    SocialActivity,
+    create_tables,
+)
+from processing.nlp_processor import load_models, process_post  # noqa: E402
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s — %(message)s",
+    datefmt="%Y-%m-%dT%H:%M:%S",
+)
+logger = logging.getLogger("coriolis.worker")
+
+
+# ---------------------------------------------------------------------------
+# Core worker logic
+# ---------------------------------------------------------------------------
+def run_worker(limit: int = 500, batch_size: int = 50, poll_interval: int = 10) -> None:
+    """Process pending social_activity rows and write to processed_activity in an infinite loop.
+
+    Parameters
+    ----------
+    limit:
+        Maximum number of rows to process in a single un-interrupted batch sequence.
+    batch_size:
+        Number of rows fetched per DB query.
+    poll_interval:
+        Seconds to sleep when no pending rows are found.
+    """
+    stats = {"processed": 0, "skipped": 0, "errors": 0}
+
+    logger.info("Worker starting — loading NLP models…")
+    load_models()
+    logger.info("Models loaded. Checking DB tables…")
+    create_tables()
+
+    logger.info("Starting infinite polling loop (interval=%ds).", poll_interval)
+    
+    while True:
+        logger.info("Checking for new posts...")
+        db = SessionLocal()
+        try:
+            total_fetched = 0
+
+            while total_fetched < limit:
+                fetch_n = min(batch_size, limit - total_fetched)
+
+                pending: list[SocialActivity] = (
+                    db.query(SocialActivity)
+                    .filter(SocialActivity.status == "pending")
+                    .order_by(SocialActivity.timestamp.asc())
+                    .limit(fetch_n)
+                    .with_for_update(skip_locked=True)
+                    .all()
+                )
+
+                if not pending:
+                    # No more rows; break inner batching loop
+                    break
+
+                logger.info("DEBUG: Found %d raw rows in the database", len(pending))
+                total_fetched += len(pending)
+                logger.info(
+                    "Processing batch of %d rows (total fetched so far: %d)…",
+                    len(pending),
+                    total_fetched,
+                )
+
+                batch_processed = 0
+                for row in pending:
+                    try:
+                        result = process_post(
+                            {
+                                "text": row.text or "",
+                                "raw_location": row.raw_location,
+                                "source": row.source,
+                                "timestamp": (
+                                    row.timestamp.isoformat() if row.timestamp else None
+                                ),
+                            }
+                        )
+
+                        processed_row = ProcessedActivity(
+                            id=uuid.uuid4(),
+                            source_id=row.id,
+                            topic=result.get("topic") or row.topic,
+                            source_text=row.text or "",
+                            extracted_locations=result["extracted_locations"],
+                            geocoded_location=result["geocoded_location"],
+                            latitude=result["latitude"],
+                            longitude=result["longitude"],
+                            sentiment_score=result["sentiment_score"],
+                            sentiment_label=result["sentiment_label"],
+                            processed_at=datetime.now(timezone.utc),
+                        )
+                        db.add(processed_row)
+
+                        # Update source row status
+                        row.status = "processed"
+                        # Back-fill lat/lon on source row if we geocoded it
+                        if result["latitude"] and row.latitude is None:
+                            row.latitude = result["latitude"]
+                            row.longitude = result["longitude"]
+
+                        db.flush()  # push to transaction; commit happens per sub-batch
+                        stats["processed"] += 1
+                        batch_processed += 1
+
+                        logger.debug(
+                            "✓ source_id=%s | locations=%s | %s → (%.4f, %.4f) | %s",
+                            row.id,
+                            result["extracted_locations"],
+                            result["geocoded_location"],
+                            result["latitude"] or 0,
+                            result["longitude"] or 0,
+                            result["sentiment_label"],
+                        )
+
+                    except Exception as exc:  # noqa: BLE001
+                        logger.error("Error processing row %s: %s", row.id, exc)
+                        row.status = "error"
+                        db.flush()
+                        stats["errors"] += 1
+
+                db.commit()
+                if batch_processed > 0:
+                    logger.info("SUCCESS: Processed %d posts", batch_processed)
+
+        except Exception as exc:  # noqa: BLE001
+            logger.critical("Worker error during polling cycle: %s", exc)
+            db.rollback()
+        finally:
+            db.close()
+
+        # Sleep before the next polling cycle
+        time.sleep(poll_interval)
+
+
+# ---------------------------------------------------------------------------
+# CLI entry point
+# ---------------------------------------------------------------------------
+def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Coriolis NLP worker — processes pending social_activity rows."
+    )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=500,
+        metavar="N",
+        help="Maximum number of rows to process in this run (default: 500).",
+    )
+    parser.add_argument(
+        "--batch-size",
+        type=int,
+        default=50,
+        metavar="N",
+        help="Number of rows fetched per DB query (default: 50).",
+    )
+    parser.add_argument(
+        "--poll-interval",
+        type=int,
+        default=10,
+        metavar="S",
+        help="Seconds to sleep when no pending rows are found (default: 10).",
+    )
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> None:
+    args = _parse_args(argv)
+    try:
+        run_worker(
+            limit=args.limit,
+            batch_size=args.batch_size,
+            poll_interval=args.poll_interval,
+        )
+    except KeyboardInterrupt:
+        logger.info("Worker stopped by user.")
+
+
+if __name__ == "__main__":
+    main()

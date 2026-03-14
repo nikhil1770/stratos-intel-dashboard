@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "instance": "https://fosstodon.org",
+    "method": "REST /api/v1/timelines/public (anonymous)",
+    "posts_requested": 5,
+    "posts_captured": 5,
+    "elapsed_seconds": 0.33,
+    "run_at": "2026-03-06T16:43:59.033670+00:00"
+  },
+  "posts": [
+    {
+      "source": "mastodon",
+      "text": "would you rather have zeppelins that float around dropping leaflets that say \"despair\" or \"smile\"",
+      "timestamp": "2026-03-06T16:43:58.000Z",
+      "raw_location": null,
+      "latitude": null,
+      "longitude": null,
+      "keywords": [],
+      "_meta": {
+        "status_id": "116183232582876693",
+        "account": "chaotic_evil@jorts.horse",
+        "url": "https://jorts.horse/@chaotic_evil/116183232553626116",
+        "language": "en"
+      }
+    },
+    {
+      "source": "mastodon",
+      "text": "Almost  # lunch  time, so off I go to meet up with my middle son at Old Tom's Restaurant for a bite to eat! \ud83c\udf54 :flan_nom:\u200b",
+      "timestamp": "2026-03-06T16:43:52.000Z",
+      "raw_location": null,
+      "latitude": null,
+      "longitude": null,
+      "keywords": [
+        "lunch"
+      ],
+      "_meta": {
+        "status_id": "116183232571070990",
+        "account": "claudiom@bsd.network",
+        "url": "https://bsd.network/@claudiom/116183232156385859",
+        "language": "en"
+      }
+    },
+    {
+      "source": "mastodon",
+      "text": "spelling out my name over the phone is a nightmare, no one gets it right and im an idiot for having it as my email address.. but srsly my last name is spelt exactly as it sounds",
+      "timestamp": "2026-03-06T16:43:56.044Z",
+      "raw_location": null,
+      "latitude": null,
+      "longitude": null,
+      "keywords": [],
+      "_meta": {
+        "status_id": "116183232474241569",
+        "account": "whirly@netzsphaere.xyz",
+        "url": "https://netzsphaere.xyz/objects/fd858057-e212-4558-bbc4-4da0761d2617",
+        "language": "en"
+      }
+    },
+    {
+      "source": "mastodon",
+      "text": "12 Beautiful Spring Bloomer Shrubs To Plant In March After the Last Frost (Give Them a Head Start Ahead of Summer Heat) https:// yourlifestylelibrary.com/shrub s-to-plant-in-march/?utm_source=flipboard&utm_medium=activitypub  Posted into Lifestyle  @ lifestyle-CareyOnTravels",
+      "timestamp": "2026-03-06T16:43:53.000Z",
+      "raw_location": null,
+      "latitude": null,
+      "longitude": null,
+      "keywords": [],
+      "_meta": {
+        "status_id": "116183232470755155",
+        "account": "CareyOnTravels@flipboard.com",
+        "url": "https://flipboard.com/@careyontravels/lifestyle-s5eeps1sz/-/a-oOfL_RtNS4q2-6iJcmgLRQ%3Aa%3A4087084191-%2F0",
+        "language": "en"
+      }
+    },
+    {
+      "source": "mastodon",
+      "text": "Hello World experience in  # Java :  - install openjdk - javac HelloWorld.java - java HelloWorld",
+      "timestamp": "2026-03-06T16:43:55.000Z",
+      "raw_location": "Gie\u00dfen, Hessen",
+      "latitude": null,
+      "longitude": null,
+      "keywords": [
+        "java"
+      ],
+      "_meta": {
+        "status_id": "116183232454605130",
+        "account": "pinjontall@sfba.social",
+        "url": "https://sfba.social/@pinjontall/116183232384257846",
+        "language": "en"
+      }
+    }
+  ]
+}
