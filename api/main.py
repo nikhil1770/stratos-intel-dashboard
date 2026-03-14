@@ -118,6 +118,8 @@ def get_activity(
         .filter(
             ProcessedActivity.latitude.isnot(None),
             ProcessedActivity.longitude.isnot(None),
+            ProcessedActivity.latitude != 0.0,
+            ProcessedActivity.longitude != 0.0,
         )
     )
 
@@ -155,13 +157,20 @@ def get_activity(
 
     features = []
     for processed, src in rows:
+        # Map back to display names for frontend matching
+        display_source = src
+        if src.lower() == "gdelt":
+            display_source = "GDELT_GKG"
+        elif src.lower() == "rss":
+            display_source = "RSS_FEED"
+
         feature = GeoJsonFeature(
             geometry=GeoJsonGeometry(
                 coordinates=[processed.longitude, processed.latitude]
             ),
             properties=ActivityProperties(
                 id=str(processed.id),
-                source=src,
+                source=display_source,
                 topic=processed.topic,
                 text=processed.source_text,
                 sentiment_score=processed.sentiment_score,
