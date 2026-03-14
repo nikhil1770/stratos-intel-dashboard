@@ -17,7 +17,6 @@ from sqlalchemy import (
     Text,
     create_engine,
 )
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import declarative_base, sessionmaker
 
@@ -28,7 +27,7 @@ load_dotenv()
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://user:password@localhost:5432/coriolis",
+    "sqlite:///./stratos.db",
 )
 
 # ---------------------------------------------------------------------------
@@ -36,7 +35,12 @@ DATABASE_URL = os.getenv(
 # ---------------------------------------------------------------------------
 Base = declarative_base()
 
-engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+# SQLite specific config
+connect_args = {}
+if DATABASE_URL.startswith("sqlite"):
+    connect_args["check_same_thread"] = False
+
+engine = create_engine(DATABASE_URL, pool_pre_ping=True, connect_args=connect_args)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
@@ -62,9 +66,9 @@ class SocialActivity(Base):
     __tablename__ = "social_activity"
 
     id = Column(
-        UUID(as_uuid=True),
+        String(36),
         primary_key=True,
-        default=uuid.uuid4,
+        default=lambda: str(uuid.uuid4()),
         nullable=False,
         comment="Auto-generated UUID primary key",
     )
@@ -167,14 +171,14 @@ class ProcessedActivity(Base):
     __tablename__ = "processed_activity"
 
     id = Column(
-        UUID(as_uuid=True),
+        String(36),
         primary_key=True,
-        default=uuid.uuid4,
+        default=lambda: str(uuid.uuid4()),
         nullable=False,
         comment="Auto-generated UUID PK",
     )
     source_id = Column(
-        UUID(as_uuid=True),
+        String(36),
         ForeignKey("social_activity.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
