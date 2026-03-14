@@ -32,6 +32,8 @@ from typing import Optional
 import pandas as pd
 import requests
 
+from database.models import SocialActivity, SessionLocal
+
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------

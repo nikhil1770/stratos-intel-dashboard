@@ -27,6 +27,8 @@ import requests
 from dotenv import load_dotenv
 from mastodon import Mastodon
 
+from database.models import SocialActivity, SessionLocal
+
 load_dotenv()
 
 logger = logging.getLogger(__name__)

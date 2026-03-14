@@ -25,10 +25,14 @@ import os
 
 load_dotenv()
 
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "sqlite:///./stratos.db",
-)
+# Force an absolute path for the SQLite database to avoid "ghost database" issues
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.abspath(os.path.join(CURRENT_DIR, ".."))
+DB_PATH = os.path.join(ROOT_DIR, "stratos_production.db")
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    DATABASE_URL = f"sqlite:///{DB_PATH}"
 
 # ---------------------------------------------------------------------------
 # Base & engine
