@@ -146,7 +146,7 @@ def run_worker(limit: int = 500, batch_size: int = 50, poll_interval: int = 10) 
                         final_lon = result.get("longitude")
 
                         # Priority for GDELT: Use pre-existing database coordinates if available
-                        if row.source.lower() == "gdelt" and row.latitude and row.longitude:
+                        if row.source.lower() == "gdelt" and row.latitude is not None and row.longitude is not None:
                             final_lat = row.latitude
                             final_lon = row.longitude
                         elif (final_lat is None or final_lat == 0.0) and row.latitude is not None:
