@@ -168,8 +168,7 @@ def get_activity(
     # Optional filters
     source_db = normalize_source(source)
     if source_db:
-        query = query.filter(ProcessedActivity.source == source_db)
-    # The above rely on SQLAlchemy relationship comparison.
+        query = query.filter(SocialActivity.source == source_db)
 
     if min_sentiment is not None:
         query = query.filter(ProcessedActivity.sentiment_score >= min_sentiment)
