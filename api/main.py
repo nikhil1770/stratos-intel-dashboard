@@ -39,6 +39,48 @@ from api.schemas import (
 api_router = APIRouter(tags=["API v1"])
 
 
+def normalize_source(val: Optional[str]) -> Optional[str]:
+    """
+    Map frontend source labels to internal database source names.
+    - 'GDELT_GKG' -> 'gdelt'
+    - 'RSS_FEED'  -> 'rss'
+    - 'MASTODON'  -> 'mastodon'
+    """
+    if not val:
+        return None
+
+    v = val.lower()
+    if v in ["gdelt", "gdelt_gkg"]:
+        return "gdelt"
+    if v in ["rss", "rss_feed"]:
+        return "rss"
+    return v
+
+
+@api_router.get("/debug/source_counts")
+def debug_source_counts(db: Session = Depends(get_db)):
+    """
+    Temporary debug endpoint to inspect database counts for each source.
+    """
+    social_counts = (
+        db.query(SocialActivity.source, func.count())
+        .group_by(SocialActivity.source)
+        .all()
+    )
+
+    processed_counts = (
+        db.query(ProcessedActivity.source, func.count())
+        .group_by(ProcessedActivity.source)
+        .all()
+    )
+
+    # Convert results to a more readable format (dict)
+    return {
+        "social_activity": {source: count for source, count in social_counts},
+        "processed_activity": {source: count for source, count in processed_counts},
+    }
+
+
 # ---------------------------------------------------------------------------
 # GET /api/v1/activity
 # ---------------------------------------------------------------------------
@@ -124,13 +166,9 @@ def get_activity(
     )
 
     # Optional filters
-    if source is not None:
-        source_val = source.lower()
-        if source_val == "gdelt_gkg":
-            source_val = "gdelt"
-        elif source_val == "rss_feed":
-            source_val = "rss"
-        query = query.filter(func.lower(SocialActivity.source) == source_val)
+    source_db = normalize_source(source)
+    if source_db:
+        query = query.filter(SocialActivity.source == source_db)
 
     if min_sentiment is not None:
         query = query.filter(ProcessedActivity.sentiment_score >= min_sentiment)
@@ -164,10 +202,16 @@ def get_activity(
         elif src.lower() == "rss":
             display_source = "RSS_FEED"
 
+        # Coordinate order: GeoJSON requires [longitude, latitude]
+        # GDELT records in the database currently have these values swapped 
+        # (latitude stored in longitude field, and vice versa)
+        if src.lower() == "gdelt":
+            coords = [processed.latitude, processed.longitude]
+        else:
+            coords = [processed.longitude, processed.latitude]
+
         feature = GeoJsonFeature(
-            geometry=GeoJsonGeometry(
-                coordinates=[processed.longitude, processed.latitude]
-            ),
+            geometry=GeoJsonGeometry(coordinates=coords),
             properties=ActivityProperties(
                 id=str(processed.id),
                 source=display_source,

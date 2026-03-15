@@ -194,7 +194,11 @@ def run_worker(limit: int = 500, batch_size: int = 50, poll_interval: int = 10) 
                         final_lat = result.get("latitude")
                         final_lon = result.get("longitude")
 
-                        if (final_lat is None or final_lat == 0.0) and row.latitude is not None:
+                        # Priority for GDELT: Use pre-existing database coordinates if available
+                        if row.source.lower() == "gdelt" and row.latitude is not None and row.longitude is not None:
+                            final_lat = row.latitude
+                            final_lon = row.longitude
+                        elif (final_lat is None or final_lat == 0.0) and row.latitude is not None:
                             final_lat = row.latitude
                             final_lon = row.longitude
                         
@@ -203,7 +207,9 @@ def run_worker(limit: int = 500, batch_size: int = 50, poll_interval: int = 10) 
                             final_lon = 0.0
 
                         if not result.get("geocoded_location") or result.get("geocoded_location") == "Unknown (Fallback)":
-                            if row.raw_location:
+                            if row.source.lower() == "gdelt" and row.raw_location:
+                                result["geocoded_location"] = row.raw_location
+                            elif row.raw_location:
                                 result["geocoded_location"] = row.raw_location
                             else:
                                 result["geocoded_location"] = "Unknown (Fallback)"
