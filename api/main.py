@@ -57,6 +57,30 @@ def normalize_source(val: Optional[str]) -> Optional[str]:
     return v
 
 
+@api_router.get("/debug/source_counts")
+def debug_source_counts(db: Session = Depends(get_db)):
+    """
+    Temporary debug endpoint to inspect database counts for each source.
+    """
+    social_counts = (
+        db.query(SocialActivity.source, func.count())
+        .group_by(SocialActivity.source)
+        .all()
+    )
+
+    processed_counts = (
+        db.query(ProcessedActivity.source, func.count())
+        .group_by(ProcessedActivity.source)
+        .all()
+    )
+
+    # Convert results to a more readable format (dict)
+    return {
+        "social_activity": {source: count for source, count in social_counts},
+        "processed_activity": {source: count for source, count in processed_counts},
+    }
+
+
 # ---------------------------------------------------------------------------
 # GET /api/v1/activity
 # ---------------------------------------------------------------------------
