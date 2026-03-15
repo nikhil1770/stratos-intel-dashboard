@@ -894,5 +894,445 @@
   "uae": {
     "lat": 24.000249,
     "lon": 53.999483
+  },
+  "united states": {
+    "lat": 39.78373,
+    "lon": -100.445882
+  },
+  "sri lanka": {
+    "lat": 7.555494,
+    "lon": 80.713785
+  },
+  "cambodia": {
+    "lat": 12.543322,
+    "lon": 104.814491
+  },
+  "cyprus": {
+    "lat": 34.917416,
+    "lon": 32.889903
+  },
+  "california, united states": {
+    "lat": 36.701463,
+    "lon": -118.755997
+  },
+  "minnesota, united states": {
+    "lat": 45.989659,
+    "lon": -94.611329
+  },
+  "katanning, western australia, australia": {
+    "lat": -33.624299,
+    "lon": 117.704281
+  },
+  "london, london, city of, united kingdom": {
+    "lat": 51.514606,
+    "lon": -0.116451
+  },
+  "mongolia": {
+    "lat": 46.825039,
+    "lon": 103.849974
+  },
+  "suffolk, suffolk, united kingdom": {
+    "lat": 52.234762,
+    "lon": 1.045134
+  },
+  "paris, france (general), france": {
+    "lat": 48.83793,
+    "lon": 2.272353
+  },
+  "philadelphia, pennsylvania, united states": {
+    "lat": 39.952724,
+    "lon": -75.163526
+  },
+  "toronto, ontario, canada": {
+    "lat": 43.653482,
+    "lon": -79.383935
+  },
+  "alabama, united states": {
+    "lat": 33.258882,
+    "lon": -86.829534
+  },
+  "west ham, newham, united kingdom": {
+    "lat": 51.528097,
+    "lon": 0.004568
+  },
+  "san antonio, texas, united states": {
+    "lat": 29.4246,
+    "lon": -98.495141
+  },
+  "kuwait": {
+    "lat": 29.273396,
+    "lon": 47.497948
+  },
+  "robben island, western cape, south africa": {
+    "lat": -33.8053,
+    "lon": 18.368883
+  },
+  "colorado, united states": {
+    "lat": 38.725178,
+    "lon": -105.607716
+  },
+  "alaska, united states": {
+    "lat": 64.445961,
+    "lon": -149.680909
+  },
+  "basingstoke, hampshire, united kingdom": {
+    "lat": 51.262826,
+    "lon": -1.086198
+  },
+  "tamil nadu, tamil nadu, india": {
+    "lat": 10.799225,
+    "lon": 78.681142
+  },
+  "oklahoma, united states": {
+    "lat": 34.955082,
+    "lon": -97.268406
+  },
+  "wembley, brent, united kingdom": {
+    "lat": 51.556069,
+    "lon": -0.279603
+  },
+  "northern ireland, craigavon, united kingdom": {
+    "lat": 54.414367,
+    "lon": -6.398849
+  },
+  "azerbaijan": {
+    "lat": 40.393629,
+    "lon": 47.787251
+  },
+  "white house, district of columbia, united states": {
+    "lat": 38.897639,
+    "lon": -77.036553
+  },
+  "hampshire, hampshire, united kingdom": {
+    "lat": 51.040128,
+    "lon": -0.965637
+  },
+  "new york, united states": {
+    "lat": 40.712728,
+    "lon": -74.006015
+  },
+  "los angeles, california, united states": {
+    "lat": 34.053691,
+    "lon": -118.242766
+  },
+  "washington, washington, united states": {
+    "lat": 40.170977,
+    "lon": -80.245453
+  },
+  "wyoming, united states": {
+    "lat": 43.170026,
+    "lon": -107.568534
+  },
+  "kharg island, bushehr, iran": {
+    "lat": 29.240594,
+    "lon": 50.311729
+  },
+  "san giuseppe, trentino-alto adige, italy": {
+    "lat": 46.058477,
+    "lon": 11.123048
+  },
+  "fujairah, al fujayrah, united arab emirates": {
+    "lat": 25.12446,
+    "lon": 56.335509
+  },
+  "stockholm, stockholm, sweden": {
+    "lat": 59.325117,
+    "lon": 18.071093
+  },
+  "ogle county, illinois, united states": {
+    "lat": 42.039701,
+    "lon": -89.31386
+  },
+  "accra, greater accra, ghana": {
+    "lat": 5.55711,
+    "lon": -0.201238
+  },
+  "north carolina, united states": {
+    "lat": 35.672964,
+    "lon": -79.039292
+  },
+  "tel aviv, tel aviv, israel": {
+    "lat": 32.0853,
+    "lon": 34.781806
+  },
+  "islamabad, islamabad, pakistan": {
+    "lat": 33.693812,
+    "lon": 73.065151
+  },
+  "san diego, california, united states": {
+    "lat": 32.71742,
+    "lon": -117.162772
+  },
+  "michigan, united states": {
+    "lat": 43.621195,
+    "lon": -84.682435
+  },
+  "petco park, california, united states": {
+    "lat": 32.707187,
+    "lon": -117.156913
+  },
+  "kentucky, united states": {
+    "lat": 37.572603,
+    "lon": -85.155141
+  },
+  "san francisco, california, united states": {
+    "lat": 37.787936,
+    "lon": -122.40752
+  },
+  "idaho, united states": {
+    "lat": 43.644764,
+    "lon": -114.015407
+  },
+  "glasgow, glasgow city, united kingdom": {
+    "lat": 55.861155,
+    "lon": -4.250169
+  },
+  "yorkton, saskatchewan, canada": {
+    "lat": 51.212045,
+    "lon": -102.461243
+  },
+  "kampala, kampala, uganda": {
+    "lat": 0.317714,
+    "lon": 32.581354
+  },
+  "georgia, united states": {
+    "lat": 32.329381,
+    "lon": -83.113737
+  },
+  "brooklyn, pennsylvania, united states": {
+    "lat": 41.751188,
+    "lon": -75.806859
+  },
+  "quebec, quebec, canada": {
+    "lat": 46.813743,
+    "lon": -71.208406
+  },
+  "kansas, united states": {
+    "lat": 38.27312,
+    "lon": -98.582187
+  },
+  "inverness, highland, united kingdom": {
+    "lat": 57.479012,
+    "lon": -4.225739
+  },
+  "blackrock, south australia, australia": {
+    "lat": -32.850738,
+    "lon": 138.570425
+  },
+  "north vancouver, british columbia, canada": {
+    "lat": 49.320629,
+    "lon": -123.073792
+  },
+  "wabasha, minnesota, united states": {
+    "lat": 44.27676,
+    "lon": -92.201816
+  },
+  "ranchi, jharkhand, india": {
+    "lat": 23.37005,
+    "lon": 85.325039
+  },
+  "edinburgh, edinburgh, city of, united kingdom": {
+    "lat": 55.951902,
+    "lon": -3.19042
+  },
+  "miami, florida, united states": {
+    "lat": 25.774157,
+    "lon": -80.193597
+  },
+  "dallas, texas, united states": {
+    "lat": 32.776272,
+    "lon": -96.796856
+  },
+  "dublin, dublin, ireland": {
+    "lat": 53.343706,
+    "lon": -6.254428
+  },
+  "virginia, united states": {
+    "lat": 37.123224,
+    "lon": -78.492772
+  },
+  "chilliwack, british columbia, canada": {
+    "lat": 49.170979,
+    "lon": -121.95255
+  },
+  "florida, united states": {
+    "lat": 27.756767,
+    "lon": -81.463983
+  },
+  "fort bragg, north carolina, united states": {
+    "lat": 35.140311,
+    "lon": -79.154146
+  },
+  "missouri, united states": {
+    "lat": 38.760481,
+    "lon": -92.561787
+  },
+  "greenock, inverclyde, united kingdom": {
+    "lat": 55.947342,
+    "lon": -4.756472
+  },
+  "hawaii, united states": {
+    "lat": 19.593802,
+    "lon": -155.42837
+  },
+  "mohali, madhya pradesh, india": {
+    "lat": 23.5315,
+    "lon": 79.231547
+  },
+  "ferryhill, durham, united kingdom": {
+    "lat": 54.687868,
+    "lon": -1.551036
+  },
+  "islamic center, district of columbia, united states": {
+    "lat": 38.917099,
+    "lon": -77.056655
+  },
+  "chatra, west bengal, india": {
+    "lat": 24.372613,
+    "lon": 87.848994
+  },
+  "lothian, midlothian, united kingdom": {
+    "lat": 55.800811,
+    "lon": -3.164561
+  },
+  "madrid, madrid, spain": {
+    "lat": 40.423728,
+    "lon": -3.689904
+  },
+  "prestwick, south ayrshire, united kingdom": {
+    "lat": 55.49828,
+    "lon": -4.611302
+  },
+  "middle creek, saskatchewan, canada": {
+    "lat": 49.19781,
+    "lon": -109.837314
+  },
+  "nanaimo, british columbia, canada": {
+    "lat": 49.163877,
+    "lon": -123.938122
+  },
+  "new delhi, delhi, india": {
+    "lat": 28.613895,
+    "lon": 77.209006
+  },
+  "kyiv, kyyiv, misto, ukraine": {
+    "lat": 50.450974,
+    "lon": 30.514779
+  },
+  "mount rinjani, nusa tenggara barat, indonesia": {
+    "lat": -8.426115,
+    "lon": 116.476752
+  },
+  "gloucestershire, gloucestershire, united kingdom": {
+    "lat": 51.892755,
+    "lon": -2.170078
+  },
+  "montana, united states": {
+    "lat": 47.375267,
+    "lon": -109.638757
+  },
+  "calcutta, west bengal, india": {
+    "lat": 22.572646,
+    "lon": 88.363895
+  },
+  "nigeria": {
+    "lat": 9.600036,
+    "lon": 7.999972
+  },
+  "jones falls, maryland, united states": {
+    "lat": 39.371814,
+    "lon": -76.652474
+  },
+  "pueblo county, colorado, united states": {
+    "lat": 38.187635,
+    "lon": -104.535015
+  },
+  "rhuddlan, denbighshire, united kingdom": {
+    "lat": 53.291474,
+    "lon": -3.465557
+  },
+  "illinois, united states": {
+    "lat": 40.079661,
+    "lon": -89.433729
+  },
+  "oman": {
+    "lat": 21.000029,
+    "lon": 57.00369
+  },
+  "essex, essex, united kingdom": {
+    "lat": 51.877364,
+    "lon": 0.949875
+  },
+  "west toledo, ohio, united states": {
+    "lat": 41.691532,
+    "lon": -83.558275
+  },
+  "greece": {
+    "lat": 38.995368,
+    "lon": 21.987713
+  },
+  "manila, manila, philippines": {
+    "lat": 14.590449,
+    "lon": 120.980362
+  },
+  "amsterdam, noord-holland, netherlands": {
+    "lat": 52.37308,
+    "lon": 4.892453
+  },
+  "saskatchewan, manitoba, canada": {
+    "lat": 53.716494,
+    "lon": -101.019434
+  },
+  "ohio state university, ohio, united states": {
+    "lat": 40.00568,
+    "lon": -83.028661
+  },
+  "colombia": {
+    "lat": 4.099917,
+    "lon": -72.908813
+  },
+  "glendora, california, united states": {
+    "lat": 34.136119,
+    "lon": -117.865339
+  },
+  "montgomery county, virginia, united states": {
+    "lat": 37.175,
+    "lon": -80.374298
+  },
+  "asaba, delta, nigeria": {
+    "lat": 6.185882,
+    "lon": 6.729707
+  },
+  "wisconsin, united states": {
+    "lat": 44.430898,
+    "lon": -89.688464
+  },
+  "estonia": {
+    "lat": 58.752378,
+    "lon": 25.331908
+  },
+  "senegal": {
+    "lat": 14.475061,
+    "lon": -14.452961
+  },
+  "south africa": {
+    "lat": -28.816624,
+    "lon": 24.991639
+  },
+  "monaco": {
+    "lat": 43.732349,
+    "lon": 7.427683
+  },
+  "panama": {
+    "lat": 8.559559,
+    "lon": -81.130843
+  },
+  "poland": {
+    "lat": 52.215933,
+    "lon": 19.134422
+  },
+  "belgium": {
+    "lat": 50.640281,
+    "lon": 4.666715
   }
 }

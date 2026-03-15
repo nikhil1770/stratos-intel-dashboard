@@ -666,12 +666,22 @@ function getFilteredFeatures() {
   const sentFilter = document.getElementById('filter-sentiment').value;
 
   return allFeatures.filter(f => {
+    // Ensure feature has valid geometry and coordinates
+    const hasCoords = f.geometry && 
+                      f.geometry.coordinates && 
+                      f.geometry.coordinates.length === 2;
+    
+    if (!hasCoords) return false;
+
+    // Optional UI filters - they still exist in the sidebar, so we keep them functional
+    // but the default state (empty) will now allow all sources.
     const props = f.properties || {};
     const src = (props.source || props.source_type || '').toLowerCase();
     const sent = props.sentiment_label || '';
 
     if (srcFilter && src !== srcFilter) return false;
     if (sentFilter && sent !== sentFilter) return false;
+
     return true;
   });
 }
